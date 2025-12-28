@@ -40,3 +40,17 @@ This project performs a deep-dive audit into 101,766 diabetic patient encounters
 1. **Hypoglycemia Protocol:** Mandatory 48-hour follow-up for any patient discharged after a "Down" insulin adjustment.
 2. **Specialty Focus:** Internal Medicine and Oncology departments should implement "Transition Coaches" for high-complexity patients.
 3. **Resource Allocation:** Prioritize discharge planning for patients with 9+ diagnoses regardless of their primary reason for admission.
+4. ## 🛠️ Data Analysis Pipeline (R)
+After establishing the SQL database, I used R for advanced cleaning and statistical testing:
+- **handshake:** Connected R to MySQL using the `DBI` package.
+- **Cleaning:** Used `str_trim` to remove hidden `\r` characters that were affecting data accuracy.
+- **Visualization:** Generated professional charts to communicate clinical risks.
+
+## 📊 Visual Insights
+### Clinical Audit: Age vs. Readmission
+![Bar Chart]()
+*This chart identifies a high-risk readmission spike in the [20-30) age demographic.*
+
+### Statistical Validation: Stay Duration vs. Complexity
+![Box Plot]()
+*The vertical **height** of these boxes proves our T-test result: complex patients (9+ diagnoses) stay 1.2 days longer than simple cases.*
