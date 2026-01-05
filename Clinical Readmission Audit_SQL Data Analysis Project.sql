@@ -17,7 +17,7 @@ CREATE TABLE diabetic_data (
     diabetesMed TEXT, readmitted TEXT
 );
 SET GLOBAL LOCAL_INFILE =1;
-SHOW VARIABLES LIKE "secure_file_priv"; -- could not import local file data so i asked sql to bring a securE file loaction since it says i can execute because its runnin on secure file piv
+SHOW VARIABLES LIKE "secure_file_priv"; -- I could not import local file data so i asked sql to bring a securE file loaction since it says i can execute because its runnin on secure file piv
 -- -- 2. Import the actual CSV file from your local computer
 LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\diabetic_data.csv' 
 INTO TABLE diabetic_data -- Specifies which table to dump the data into
@@ -30,20 +30,20 @@ IGNORE 1 ROWS; -- Skips the first row (the header) so column names aren't import
 SELECT COUNT(*) FROM diabetic_data;
 
 
-/* DATA CLEANING PHASE
-Purpose: Transform the raw 'Text' import into a structured, analysis-ready table.
-creating a VIEW so I don't change the raw data, but I see a 'clean' version of it.
+/* DATA CLEANING
+I Transform the raw 'Text' import into a structured, analysis-ready table.
+creating a VIEW so I don't change the raw data, but I see a clean version of it.
 */
 
 
 CREATE OR REPLACE VIEW cleaned_diabetic_data AS
 SELECT 
- -- 1. Convert IDs to Integers for faster indexing
+ -- 1. Convert IDs to Integers 
     CAST(encounter_id AS UNSIGNED) AS encounter_id,
     CAST(patient_nbr AS UNSIGNED) AS patient_id,
     
      -- 2. Handling Missing Categories
-    -- If race is '?', we label it 'Unknown' for professional reporting
+    -- If race is '?', we label it 'Unknown' 
     CASE WHEN race = '?' THEN 'Unknown' ELSE race END AS race,
     
     gender,
@@ -77,7 +77,7 @@ SELECT
     
 FROM diabetic_data;
 
--- check if all columns are present
+-- I checked if all columns are present
 SELECT 
     race, 
     age, 
@@ -89,7 +89,7 @@ FROM cleaned_diabetic_data
 LIMIT 5;
 
 
-/* Q1: Departmental Risk Audit (Specialty)
+/* Departmental Risk Audit (Specialty)
 Purpose: To identify which hospital departments have the highest readmission rates to help management improve discharge protocols.
 */
 
@@ -104,7 +104,7 @@ GROUP BY specialty -- Group results by department
 HAVING total_visits > 100 -- Ensure we only look at high-volume departments
 ORDER BY readmit_rate DESC; -- Sort by highest risk first
 
-/* Q2: Patient Complexity Analysis (Diagnoses)
+/*  Patient Complexity Analysis (Diagnoses)
 Purpose: To determine if patients with multiple underlying health conditions (Comorbidities) are more likely to return.
 */
 
@@ -118,7 +118,7 @@ FROM cleaned_diabetic_data
 GROUP BY complexity -- Group by our new complexity buckets
 ORDER BY readmit_rate DESC; -- Show the most "fragile" groups at the top
 
-/* Q3: Medication Stability Analysis (Insulin)
+/*  Medication Stability Analysis (Insulin)
 Purpose: To see if changing a patient's insulin dose right before discharge increases their risk of returning.
 */
 SELECT 
@@ -130,7 +130,7 @@ GROUP BY insulin -- Group by the medication trend
 ORDER BY readmit_rate DESC; -- Identify if "Up/Down" changes cause more risk
 
 
-/* Q4: Acuity & Lab Intensity Analysis
+/* Acuity & Lab Intensity Analysis
 Purpose: To find out if a high number of lab tests (indicating a serious hospital stay) correlates with a longer recovery time.
 */
 SELECT 
@@ -142,7 +142,7 @@ FROM cleaned_diabetic_data
 GROUP BY lab_intensity -- Group by the intensity of the care received
 ORDER BY avg_stay DESC; -- Show which intensity level stays the longest
 
-/* Q5: Age-Based Vulnerability Audit
+/* Age-Based Vulnerability Audit
 Purpose: To identify which life stages are most at risk, specifically looking for trends in younger vs. older diabetic patients.
 */
 SELECT 
@@ -153,8 +153,7 @@ FROM cleaned_diabetic_data
 GROUP BY age -- Group by age bracket
 ORDER BY readmit_rate DESC; -- Find the most vulnerable age group
 
-/*
-Q6: Demographic Disparity Audit (Race)
+/* Demographic Disparity Audit (Race)
 Purpose: To uncover potential gaps in healthcare outcomes that may be caused by social or economic barriers.
 */
 SELECT 
