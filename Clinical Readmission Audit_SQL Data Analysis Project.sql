@@ -19,7 +19,7 @@ CREATE TABLE diabetic_data (
 SET GLOBAL LOCAL_INFILE =1;
 SHOW VARIABLES LIKE "secure_file_priv"; -- I could not import local file data so i asked sql to bring a securE file loaction since it says i can execute because its runnin on secure file piv
 -- -- 2. Import the actual CSV file from your local computer
-LOAD DATA INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\diabetic_data.csv' 
+LOAD DATA local INFILE 'C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\diabetic_data.csv' 
 INTO TABLE diabetic_data -- Specifies which table to dump the data into
 FIELDS TERMINATED BY ',' -- -- Tells SQL that each column is separated by a comma (CSV format)
 OPTIONALLY ENCLOSED BY '"' -- Handles data values that might have quotes around them
